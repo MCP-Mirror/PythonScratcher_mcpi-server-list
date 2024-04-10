@@ -11,4 +11,5 @@ if the link doesnt work try:
 
 # Contribution
 contribute 
+fork (and maybe pull request)
 [gpl 3.0](https://github.com/PythonScratcher/mcpi-server-list/blob/main/LICENSE)
