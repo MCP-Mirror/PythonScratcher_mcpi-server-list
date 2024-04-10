@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCPi Server List</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>MCPi Server List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Server Address</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="serverList"></tbody>
+    </table>
+</div>
+
+<script>
+    fetch('https://cors.rare1k.workers.dev/?https://pythonscratcher.pics/p/raw/60zeimoq39')
+    .then(response => response.text())
+    .then(data => {
+        const serverList = data.trim().split('\n');
+        const tableBody = document.getElementById('serverList');
+
+        serverList.forEach(serverAddress => {
+            const row = tableBody.insertRow();
+            const cell1 = row.insertCell(0);
+            const cell2 = row.insertCell(1);
+
+            cell1.textContent = serverAddress;
+
+            fetch('https://cors.rare1k.dev/?https://checker.mcpi.host/ping?server_address=' + encodeURIComponent(serverAddress))
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                cell2.textContent = "Online - " + data.server_name;
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+                cell2.textContent = "Offline";
+            });
+        });
+    })
+    .catch(error => {
+        console.error('There was a problem fetching the server list:', error);
+    });
+</script>
+  <div class="container">
+      <h1>Server Checker</h1>
+      <input type="text" id="serverAddress" placeholder="Enter Server Address (e.g., example.com:19132)">
+      <br>
+      <button onclick="pingServer()">Ping Server</button>
+      <div id="serverName"></div>
+  </div>
+
+  <script>
+      function pingServer() {
+          var serverAddress = document.getElementById("serverAddress").value;
+          if (!serverAddress) {
+              alert("Please enter the server address.");
+              return;
+          }
+
+          fetch('/ping?server_address=' + encodeURIComponent(serverAddress))
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error('Network response was not ok');
+              }
+              return response.json();
+          })
+          .then(data => {
+              document.getElementById("serverName").innerHTML = "Server Name: " + data.server_name;
+          })
+          .catch(error => {
+              console.error('There was a problem with the fetch operation:', error);
+              document.getElementById("serverName").innerHTML = "Error: " + error.message;
+          });
+      }
+  </script>
+</body>
+</html>
