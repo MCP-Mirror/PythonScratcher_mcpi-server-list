@@ -94,7 +94,7 @@
               return;
           }
 
-          fetch('/ping?server_address=' + encodeURIComponent(serverAddress))
+          fetch('https://checker.mcpi.host/ping?server_address=' + encodeURIComponent(serverAddress))
           .then(response => {
               if (!response.ok) {
                   throw new Error('Network response was not ok');
